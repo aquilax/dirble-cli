@@ -1,7 +1,7 @@
 # dirble-cli
 Command line tool for accessing https://dirble.com API
 
-# Installation
+## Installation
 
 ```
 go get -u github.com/aquilax/go-dirble
