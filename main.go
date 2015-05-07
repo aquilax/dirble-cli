@@ -76,10 +76,9 @@ func main() {
 				processResult(getDirble(c.GlobalString("token")).Stations(intToParam(c, "page"),
 					intToParam(c, "ipp"), intToParam(c, "offset")))
 			},
-		},
-		{
+		}, {
 			Name:  "station",
-			Usage: "Get information about single station",
+			Usage: "Get information about single station (requires station id as argument)",
 			Action: func(c *cli.Context) {
 				if len(c.Args()) > 0 {
 					id, err := strconv.Atoi(c.Args()[0])
@@ -88,6 +87,53 @@ func main() {
 					}
 					processResult(getDirble(c.GlobalString("token")).Station(id))
 				}
+			},
+		}, {
+			Name:    "song-history",
+			Aliases: []string{"sh"},
+			Usage:   "Get song history for station (requires station id as argument)",
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					id, err := strconv.Atoi(c.Args()[0])
+					if err != nil {
+						panic(err)
+					}
+					processResult(getDirble(c.GlobalString("token")).StationSongHistory(id))
+				}
+			},
+		}, {
+			Name:    "similar-stations",
+			Aliases: []string{"ss"},
+			Usage:   "Get list of similar stations (requires station id as argument)",
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					id, err := strconv.Atoi(c.Args()[0])
+					if err != nil {
+						panic(err)
+					}
+					processResult(getDirble(c.GlobalString("token")).StationSimilar(id))
+				}
+			},
+		}, {
+			Name:    "categories",
+			Aliases: []string{"cat"},
+			Usage:   "Get list of categories",
+			Action: func(c *cli.Context) {
+				processResult(getDirble(c.GlobalString("token")).Categories())
+			},
+		}, {
+			Name:    "primary-categories",
+			Aliases: []string{"pcat"},
+			Usage:   "Get list of primary categories",
+			Action: func(c *cli.Context) {
+				processResult(getDirble(c.GlobalString("token")).CategoriesPrimary())
+			},
+		}, {
+			Name:    "categories-tree",
+			Aliases: []string{"tcat"},
+			Usage:   "Get the full category tree",
+			Action: func(c *cli.Context) {
+				processResult(getDirble(c.GlobalString("token")).CategoriesTree())
 			},
 		},
 	}
