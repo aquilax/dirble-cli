@@ -7,6 +7,7 @@ import (
 	"github.com/codegangsta/cli"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 const (
@@ -74,6 +75,19 @@ func main() {
 			Action: func(c *cli.Context) {
 				processResult(getDirble(c.GlobalString("token")).Stations(intToParam(c, "page"),
 					intToParam(c, "ipp"), intToParam(c, "offset")))
+			},
+		},
+		{
+			Name:  "station",
+			Usage: "Get information about single station",
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					id, err := strconv.Atoi(c.Args()[0])
+					if err != nil {
+						panic(err)
+					}
+					processResult(getDirble(c.GlobalString("token")).Station(id))
+				}
 			},
 		},
 	}
