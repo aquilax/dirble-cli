@@ -76,6 +76,22 @@ func main() {
 					intToParam(c, "ipp"), intToParam(c, "offset")))
 			},
 		},
+		{
+			Name:    "search",
+			Aliases: []string{"s"},
+			Usage:   "Search for station",
+			Flags: []cli.Flag{
+				cli.IntFlag{
+					Name:  "page",
+					Usage: "page to fetch",
+				},
+			},
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					processResult(getDirble(c.GlobalString("token")).Search(c.Args()[0], intToParam(c, "page")))
+				}
+			},
+		},
 	}
 	app.Run(os.Args)
 }
