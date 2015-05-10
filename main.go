@@ -77,6 +77,12 @@ func main() {
 					intToParam(c, "ipp"), intToParam(c, "offset")))
 			},
 		}, {
+			Name:  "countries",
+			Usage: "Get list of countries",
+			Action: func(c *cli.Context) {
+				processResult(getDirble(c.GlobalString("token")).Countries())
+			},
+		}, {
 			Name:  "country-stations",
 			Usage: "Get List of stations for country",
 			Flags: []cli.Flag{
