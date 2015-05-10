@@ -7,6 +7,7 @@ import (
 	"github.com/codegangsta/cli"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 const (
@@ -75,8 +76,52 @@ func main() {
 				processResult(getDirble(c.GlobalString("token")).Stations(intToParam(c, "page"),
 					intToParam(c, "ipp"), intToParam(c, "offset")))
 			},
-		},
-		{
+		}, {
+			Name:  "country-stations",
+			Usage: "Get List of stations for country",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "all",
+					Usage: "Get all stations",
+				},
+				cli.IntFlag{
+					Name:  "page",
+					Usage: "page to fetch",
+				},
+				cli.IntFlag{
+					Name:  "ipp",
+					Usage: "items per page",
+				},
+				cli.IntFlag{
+					Name:  "offset",
+					Usage: "offset",
+				},
+			},
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					processResult(getDirble(c.GlobalString("token")).CountriesStations(c.Args()[0], c.Bool("all"),
+						intToParam(c, "page"), intToParam(c, "ipp"), intToParam(c, "offset")))
+				}
+			},
+		}, {
+			Name:  "continents",
+			Usage: "Get list of continents",
+			Action: func(c *cli.Context) {
+				processResult(getDirble(c.GlobalString("token")).Continents())
+			},
+		}, {
+			Name:  "countries",
+			Usage: "Get countries for continent",
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					continentId, err := strconv.Atoi(c.Args()[0])
+					if err != nil {
+						panic(err)
+					}
+					processResult(getDirble(c.GlobalString("token")).ContinentsCountries(continentId))
+				}
+			},
+		}, {
 			Name:    "search",
 			Aliases: []string{"s"},
 			Usage:   "Search for station",
