@@ -136,6 +136,49 @@ func main() {
 				processResult(getDirble(c.GlobalString("token")).CategoriesTree())
 			},
 		}, {
+			Name:  "categoriy-stations",
+			Usage: "Get list of stations for category",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "all",
+					Usage: "Get all stations",
+				},
+				cli.IntFlag{
+					Name:  "page",
+					Usage: "page to fetch",
+				},
+				cli.IntFlag{
+					Name:  "ipp",
+					Usage: "items per page",
+				},
+				cli.IntFlag{
+					Name:  "offset",
+					Usage: "offset",
+				},
+			},
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					countryId, err := strconv.Atoi(c.Args()[0])
+					if err != nil {
+						panic(err)
+					}
+					processResult(getDirble(c.GlobalString("token")).CategoryStations(countryId, c.Bool("all"),
+						intToParam(c, "page"), intToParam(c, "ipp"), intToParam(c, "offset")))
+				}
+			},
+		}, {
+			Name:  "categoriy-childs",
+			Usage: "Get list of child categories",
+			Action: func(c *cli.Context) {
+				if len(c.Args()) > 0 {
+					categoryId, err := strconv.Atoi(c.Args()[0])
+					if err != nil {
+						panic(err)
+					}
+					processResult(getDirble(c.GlobalString("token")).CategoryChilds(categoryId))
+				}
+			},
+		}, {
 			Name:  "countries",
 			Usage: "Get list of countries",
 			Action: func(c *cli.Context) {

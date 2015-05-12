@@ -27,6 +27,8 @@ COMMANDS:
    categories, cat      Get list of categories
    primary-categories, pcat   Get list of primary categories
    categories-tree, tcat   Get the full category tree
+   categoriy-stations      Get list of stations for category
+   categoriy-childs     Get list of child categories
    countries         Get list of countries
    country-stations     Get List of stations for country
    continents        Get list of continents
@@ -38,4 +40,5 @@ GLOBAL OPTIONS:
    --token, -t       API Token [$DIRBLE_API_TOKEN]
    --help, -h     show help
    --version, -v  print the version
+
 ```
