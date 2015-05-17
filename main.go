@@ -16,7 +16,19 @@ const (
 	defaultInt = -1
 )
 
+const (
+	ErrOk = iota
+	ErrNoToken
+	ErrBadParameters
+	ErrHttp
+	ErrOutput
+)
+
 func getDirble(token string) *dirble.Dirble {
+	if token == "" {
+		fmt.Fprintln(os.Stderr, "Please provide API token using `--token=`;")
+		os.Exit(ErrNoToken)
+	}
 	tr := http.Transport{}
 	return dirble.New(&tr, token)
 }
@@ -24,12 +36,15 @@ func getDirble(token string) *dirble.Dirble {
 func processResult(d interface{}, err error) {
 	var res []byte
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(ErrHttp)
 	}
 	if res, err = json.MarshalIndent(d, "", "	"); err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(ErrOutput)
 	}
 	fmt.Printf("%s\n", res)
+	os.Exit(ErrOk)
 }
 
 func intToParam(c *cli.Context, name string) *int {
@@ -83,10 +98,13 @@ func main() {
 				if len(c.Args()) > 0 {
 					id, err := strconv.Atoi(c.Args()[0])
 					if err != nil {
-						panic(err)
+						fmt.Fprintln(os.Stdout, "Station ID must be integer")
+						os.Exit(ErrBadParameters)
 					}
 					processResult(getDirble(c.GlobalString("token")).Station(id))
 				}
+				fmt.Fprintln(os.Stdout, "Please provide station id as parameter")
+				os.Exit(ErrBadParameters)
 			},
 		}, {
 			Name:    "song-history",
@@ -246,5 +264,5 @@ func main() {
 			},
 		},
 	}
-	app.Run(os.Args)
+	app.RunAndExitOnError()
 }
